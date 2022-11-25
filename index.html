@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+
+<style>
+      body {
+        margin: 0;
+      }
+
+      @font-face {
+        font-family: Plastic;
+        src: url('fonts/Plastic.otf');
+        font-style: normal;
+      }
+
+      h1 {
+        font-family: Plastic;
+        font-size: 120px;
+      }
+
+      img {
+        width: 100%;
+      }
+     </style>
+
+  </head>
+
+  <body bgcolor = yellow>
+
+    <div id="myBlinkingDiv">
+      <h1>THIS ROCKS</h1>
+    </div>
+
+    <canvas id="cnv"></canvas>
+    <canvas id="cnv-1" width="100" height="100"></canvas>
+    <img id="sw-6" src="bilder/sw-6.jpg">
+
+    <script>
+
+      //Headline - blinken
+      const myHeading = document.querySelector('h1');
+
+      const blink_speed = 700; //Geschwindigkeit
+      
+      const t = setInterval(function () {
+        const ele = document.getElementById('myBlinkingDiv');
+        ele.style.visibility = (ele.style.visibility == 'hidden' ? '' : 'hidden');
+      }, blink_speed);
+   
+      //Headline - wandern
+      function foo() {
+        heading.style.transform = `translateX(${x}px)`;
+        x = x + 1;
+        window.requestAnimationFrame(foo);
+        if(x > 850) {
+        x = -1000;
+        }
+        //window.setTimeout(animate, 30);
+      }
+      let x = 0;
+      const heading = document.querySelector("h1");
+      foo();
+     
+
+      //Animation 
+      function optimizeCanvas(cnv) {
+        const dpr = window.devicePixelRatio;
+        const rect = cnv.getBoundingClientRect();
+        cnv.width = rect.width * dpr;
+        cnv.height = rect.height * dpr;
+        cnv.getContext('2d').scale(dpr, dpr);
+        cnv.style.width = `${rect.width}px`;
+        cnv.style.height = `${rect.height}px`;
+      }
+ 
+      console.clear(); //Konsole putzen
+      const ww = window.innerWidth;
+      const wh = window.innerHeight;
+
+      const cnv = document.querySelector("#cnv");
+      cnv.width = ww;
+      cnv.height = wh;
+      const ctx = cnv.getContext('2d');
+      optimizeCanvas(cnv);
+
+      const r = 200
+      let a = 0
+
+      //Bild laden
+      const sw6 = document.getElementById('sw-6')
+      const cnv1 = document.getElementById('cnv-1')
+      const ctx1 = cnv1.getContext('2d')
+      var image = new Image()
+      image.src = "bilder/sw-6.jpg"
+      image.onload = function()
+      {
+        context.drawImage(image, 30, 30)
+      }
+
+      //optimizeCanvas(cnv1)
+      //cnv1.style.background = 'deeppink'
+      
+      sw6.addEventListener('load', () => {
+        draw()
+      })
+
+      let s = 0;
+      let w = 0;
+
+
+      function draw() {
+        //Bild
+        const nw = sw6.naturalWidth
+        const nh = sw6.naturalHeight
+        //ctx1.drawImage(sw6, nw-400, nh-400, 400, 400, s, w, 100, 100)
+        //s -= 0.1
+        //w -= 0.1
+        //window.requestAnimationFrame(draw)
+
+        //leftCircle
+        ctx.save()
+        ctx.translate(ww/2-150, wh/4);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.drawImage(sw6, nw-400, nh-400, 400, 400, s, w, 100, 100)
+        const x1 = Math.sin(a + 100) * r;
+        const y1 = Math.sin(a - 100) * r;
+        a += 0.009
+        ctx.arc(x1, y1, 50, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        //leftCircle 2
+        ctx.save()
+        ctx.translate(ww/2-300, wh/4);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        const x4 = Math.sin(a + 50) * r;
+        const y4 = Math.sin(a - 50) * r;
+        a += 0.001
+        ctx.arc(x4, y4, 50, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        //rightCircle
+        ctx.save()
+        ctx.translate(ww/2+150, wh/4);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        const x2 = Math.sin(a - 100) * r;
+        const y2 = Math.sin(a + 100) * r;
+        a += 0.009
+        ctx.arc(x2, y2, 50, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        //rightCircle 2
+        ctx.save()
+        ctx.translate(ww/2+300, wh/4);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        const x3 = Math.sin(a - 50) * r;
+        const y3 = Math.sin(a + 50) * r;
+        a += 0.001
+        ctx.arc(x3, y3, 50, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+        window.requestAnimationFrame(draw);
+        }
+      draw()
+
+    </script>
+
+  </body>
+</html>
